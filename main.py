@@ -3,6 +3,7 @@ import math
 import moderngl
 import moderngl_window
 from pyrr import Matrix44
+from pyglet.media import Player, StaticSource, load
 from moderngl_window.scene.camera import KeyboardCamera
 from track import BSTrack
 
@@ -13,23 +14,41 @@ class BeatSaberMap:
         self.scene = scene
         self.track = track
 
+        # for node in self.scene.nodes:
+        #     print(node)
+
         # Objects & Materials
         self.mat_back_lights = self.scene.find_material(name="Back Lights")
 
         # Static unlit par of the map
         self.highway = self.scene.find_node(name="Highway")
 
+        self.light_center = self.scene.find_node(name="Center Lights")
+
         # Rings
         self.ring_01 = self.scene.find_node(name='Ring.001')
         self.ring_02 = self.scene.find_node(name='Ring.001')
 
         # Light rails on left and right side
-        self.right_static = self.scene.find_node(name="Right Static")
-        self.left_static = self.scene.find_node(name="Left Static")
+        self.laser_static_left = self.scene.find_node(name="Right Static")
+        self.laser_static_right = self.scene.find_node(name="Left Static")
+
+        # Left laser
+        self.laser_left_01 = self.scene.find_node(name="Left 1")
+        self.laser_left_02 = self.scene.find_node(name="Left 2")
+        self.laser_left_03 = self.scene.find_node(name="Left 3")
+        self.laser_left_04 = self.scene.find_node(name="Left 4")
+
+        # Right laser
+        self.laser_right_01 = self.scene.find_node(name="Right 1")
+        self.laser_right_02 = self.scene.find_node(name="Right 2")
+        self.laser_right_03 = self.scene.find_node(name="Right 3")
+        self.laser_right_04 = self.scene.find_node(name="Right 4")
 
     def render(self, camera, time, frame_time):
-        self.mat_back_lights.color = math.fmod(time, 1.0), 0.0, 0.0, 1.0
+        # self.mat_back_lights.color = math.fmod(time, 1.0), 0.0, 0.0, 1.0
         self.scene.draw(camera.projection.matrix, camera.matrix)
+
 
 
 class BeatSaber(moderngl_window.WindowConfig):
@@ -49,6 +68,10 @@ class BeatSaber(moderngl_window.WindowConfig):
             self.load_scene('bs_map.glb'),
             BSTrack('./resources/Lightshow.dat'),
         )
+        # self.music_player = Player()
+        # self.music_source = StaticSource(load('./resources/megalovania.wav'))
+        # self.music_player.queue(self.music_source)
+        # self.music_player.play()
 
     def render(self, time, frame_time):
         self.ctx.enable(moderngl.DEPTH_TEST | moderngl.CULL_FACE)
