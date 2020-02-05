@@ -47,8 +47,13 @@ class BeatSaberMap:
 
     def render(self, camera, time, frame_time):
         # self.mat_back_lights.color = math.fmod(time, 1.0), 0.0, 0.0, 1.0
+        self.mat_back_lights.color = (
+            int('0x77', base=16) / 255,
+            int('0x56', base=16) / 255,
+            int('0xb5', base=16) / 255,
+            int('0xff', base=16) / 255,
+        )
         self.scene.draw(camera.projection.matrix, camera.matrix)
-
 
 
 class BeatSaber(moderngl_window.WindowConfig):
@@ -75,7 +80,7 @@ class BeatSaber(moderngl_window.WindowConfig):
 
     def render(self, time, frame_time):
         self.ctx.enable(moderngl.DEPTH_TEST | moderngl.CULL_FACE)
-        self.wnd.clear(0.25, 0.25, 0.25)
+        # self.wnd.clear(0.25, 0.25, 0.25)
         self.map.render(self.camera, time, frame_time)
 
     def key_event(self, key, action, modifiers):
