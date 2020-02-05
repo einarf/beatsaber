@@ -35,6 +35,9 @@ class BSTrack:
         self.channels = {e.value: BSChannel(e) for e in EventType}
         self.data = self._load()
 
+    def get_channel(self, type):
+        return self.channels[type]
+
     def _load(self):
         with open(self.filename, mode='r') as fd:
             data = json.load(fd)
@@ -65,6 +68,10 @@ class BSChannel:
         self.event_type = event_type
         self.events = []
 
+    def get_value(self, time: int):
+        index = bisect.bisect_left(self.events, time)
+        return self.events[index].value
+
     def add_event(self, event):
         self.events.append(event)
 
@@ -75,3 +82,9 @@ class BSEvent:
         self.type = type
         self.time = time
         self.value = value
+
+    def __lt__(self, other):
+        return self.time < other.time
+
+    def __ge__(self, other):
+        return self.time > other.time
