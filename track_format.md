@@ -13,10 +13,6 @@ Time in events is in beats of the global bpm
 High event values refers to light colors.
 For example `2002171391` is `0x7756b5ff` (purple).
 
-```
-{0, 1, 2, 3, 4, 8, 9, 12, 13}
-```
-
 https://github.com/Caeden117/ChroMapper/blob/master/Assets/__Scripts/Map/Events/MapEvent.cs#L12
 
 ```cpp
