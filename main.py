@@ -100,6 +100,7 @@ class BeatSaber(moderngl_window.WindowConfig):
 
     def render(self, time, frame_time):
         self.ctx.enable(moderngl.DEPTH_TEST | moderngl.CULL_FACE)
+        time = self.music_player.time
         # self.wnd.clear(0.25, 0.25, 0.25)
         self.map.render(self.camera, time, frame_time)
 
