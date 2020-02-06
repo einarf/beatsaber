@@ -1,4 +1,5 @@
 import json
+import bisect
 from enum import Enum
 
 
@@ -33,10 +34,14 @@ class BSTrack:
     def __init__(self, filename):
         self.filename = filename
         self.channels = {e.value: BSChannel(e) for e in EventType}
-        self.data = self._load()
+        self._load()
 
     def get_channel(self, type):
         return self.channels[type]
+
+    def get_value(self, channel, time):
+        channel = self.channels[channel.value]
+        return channel.get_value(time)
 
     def _load(self):
         with open(self.filename, mode='r') as fd:
@@ -53,13 +58,22 @@ class BSTrack:
                 print("Event {} not supported".format(event_type.value))
                 continue
 
+            # Transform events if needed for easy access
+            value = event['_value']
+            # If value is greater or equal to 255 we are dealing with a color value
+            if value >= 255:
+                value = int_to_color_tuple(value)
+                # print(value)
+                continue
+
             channel.add_event(BSEvent(
                 event_type,
                 int(event['_time'] * 1000 / (267 / 60)),
-                event['_value']
+                value,
             ))
 
-        return data
+        # import pprint
+        # pprint.pprint(self.channels[EventType.ROAD_LIGHTS.value].events[100:])
 
 
 class BSChannel:
@@ -67,10 +81,40 @@ class BSChannel:
     def __init__(self, event_type):
         self.event_type = event_type
         self.events = []
+        self.current_color = (1.0, 1.0, 1.0, 1.0)
 
     def get_value(self, time: int):
         index = bisect.bisect_left(self.events, time)
-        return self.events[index].value
+        event = self.events[index]
+        color = None
+        # if event == EventType.ROAD_LIGHTS:
+        # Light color
+        if isinstance(event.value, tuple):
+            self.current_color = event.value
+            color = self.current_color
+        # Lights off
+        elif event.value == 0:
+            color = (0, 0, 0, 0)
+        # Blue lights on
+        elif event.value == 1:
+            color = (0, 0, 1, 1)
+        # Blue flash
+        elif event.value == 2:
+            color = (0, 0, 1.0 - (time - event.time)/1000, 1)
+        # Blue Fade (3s)
+        elif event.value == 3:
+            color = (0, 0, (time - event.time)/3000, 1)
+        # Red lights on
+        elif event.value == 5:
+            color = (1, 0, 0, 1)
+        # Red flash
+        elif event.value == 6:
+            color = (0, 0, (time - event.time)/1000, 1)
+        # Red fade (3s)
+        elif event.value == 7:
+            color = (0, 0, (time - event.time)/3000, 1)           
+
+        return color, event.time
 
     def add_event(self, event):
         self.events.append(event)
@@ -84,7 +128,18 @@ class BSEvent:
         self.value = value
 
     def __lt__(self, other):
-        return self.time < other.time
+        return self.time < other
 
     def __ge__(self, other):
-        return self.time > other.time
+        return self.time > other
+
+    def __repr__(self):
+        return "<BSEvent type={} time={} value={}".format(self.type, self.time, self.value)
+
+def int_to_color_tuple(value):
+    return (
+        ((2002894892 & 0xFF000000) >> 24) / 255,
+        ((2002894892 & 0x00FF0000) >> 16) / 255,
+        ((2002894892 & 0x0000FF00) >> 8) / 255,
+        (2002894892 & 0x000000FF) / 255,
+    )

@@ -1,8 +1,11 @@
 # Track format
 
-Song: Megalovania - Camellia)
-Duration: 04:27 (267s)
-BPM: 242
+* Song: Megalovania - Camellia)
+* Duration: 04:27 (267s)
+* BPM: 242
+* URL: https://skystudioapps.com/bs-viewer/?id=63e1&difficulty=0
+
+Possible test song : https://www.youtube.com/watch?v=J6C8ehSdbm0
 
 ## Time
 
@@ -49,3 +52,6 @@ public const int LIGHT_VALUE_RED_FADE = 7;
 
 public static readonly int[] LIGHT_VALUE_TO_ROTATION_DEGREES = { -60, -45, -30, -15, 15, 30, 45, 60 };
 ```
+
+## Event Details
+
