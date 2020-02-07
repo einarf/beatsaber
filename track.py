@@ -2,8 +2,12 @@ import json
 import bisect
 from enum import Enum
 
+class ChannelEvents:
+    """Internal event types to funnel event into more channels"""
+    
 
 class EventType(Enum):
+    """Beat Saber event types"""
     BACK_LASERS = 0
     RING_LIGHTS = 1
     LEFT_LASERS = 2
@@ -18,6 +22,7 @@ class EventType(Enum):
 
 
 class LightValue(Enum):
+    """Beat Saber light event types"""
     OFF = 0
     BLUE_ON = 1
     BLUE_FLASH = 2
@@ -31,8 +36,9 @@ LIGHT_VALUE_TO_ROTATION_DEGREES = [-60, -45, -30, -15, 15, 30, 45, 60]
 
 class BSTrack:
 
-    def __init__(self, filename):
+    def __init__(self, filename, bpm):
         self.filename = filename
+        self.bpm = bpm
         self.channels = {e.value: BSChannel(e) for e in EventType}
         self._load()
 
@@ -68,7 +74,7 @@ class BSTrack:
 
             channel.add_event(BSEvent(
                 event_type,
-                int(event['_time'] * 1000 / (267 / 60)),
+                int(event['_time'] * 1000 / (self.bpm / 60)),
                 value,
             ))
 
@@ -86,12 +92,19 @@ class BSChannel:
     def get_value(self, time: int):
         index = bisect.bisect_left(self.events, time)
         event = self.events[index]
+        if time < event.time:
+            if index == 0:
+                return (0,0,0,0), 0
+            else:
+                event = self.events[index - 1]
+
         color = None
         # if event == EventType.ROAD_LIGHTS:
         # Light color
         if isinstance(event.value, tuple):
-            self.current_color = event.value
-            color = self.current_color
+            pass
+            #self.current_color = event.value
+            #color = self.current_color
         # Lights off
         elif event.value == 0:
             color = (0, 0, 0, 0)
@@ -103,16 +116,16 @@ class BSChannel:
             color = (0, 0, 1.0 - (time - event.time)/1000, 1)
         # Blue Fade (3s)
         elif event.value == 3:
-            color = (0, 0, (time - event.time)/3000, 1)
+            color = (0, 0, 1.0 - (time - event.time)/3000, 1)
         # Red lights on
         elif event.value == 5:
             color = (1, 0, 0, 1)
         # Red flash
         elif event.value == 6:
-            color = (0, 0, (time - event.time)/1000, 1)
+            color = (1.0 - (time - event.time)/1000, 0, 0, 1)
         # Red fade (3s)
         elif event.value == 7:
-            color = (0, 0, (time - event.time)/3000, 1)           
+            color = (1.0 - (time - event.time)/2500, 0, 0, 1)           
 
         return color, event.time
 
