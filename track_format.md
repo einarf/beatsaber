@@ -1,9 +1,9 @@
 # Track format
 
-* Song: Megalovania - Camellia)
-* Duration: 04:27 (267s)
+* Song: MEGALOVANIA (Camellia Remix)
+* Duration: 06:10
 * BPM: 242
-* URL: https://skystudioapps.com/bs-viewer/?id=63e1&difficulty=0
+* URL: https://bsaber.com/songs/63e1/
 
 Possible test song : https://www.youtube.com/watch?v=J6C8ehSdbm0
 
@@ -13,7 +13,7 @@ Time in events is in beats of the global bpm
 
 ## Event types
 
-High event values refers to light colors.
+High event values refers to light colors?
 For example `2002171391` is `0x7756b5ff` (purple).
 
 https://github.com/Caeden117/ChroMapper/blob/master/Assets/__Scripts/Map/Events/MapEvent.cs#L12
