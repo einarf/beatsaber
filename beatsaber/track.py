@@ -1,6 +1,9 @@
 import json
 import bisect
 from enum import Enum
+from moderngl_window import resources
+from moderngl_window.meta import DataDescription
+
 
 class ChannelEvents:
     """Internal event types to funnel event into more channels"""
@@ -50,8 +53,7 @@ class BSTrack:
         return channel.get_value(time)
 
     def _load(self):
-        with open(self.filename, mode='r') as fd:
-            data = json.load(fd)
+        data = resources.data.load(DataDescription(self.filename, kind='json'))
 
         for event in data['_events']:
             try:
