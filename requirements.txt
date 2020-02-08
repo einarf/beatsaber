@@ -1,1 +1,2 @@
-moderngl-window==2.0.5
+moderngl-window==2.1.*
+pyglet==1.5.*
