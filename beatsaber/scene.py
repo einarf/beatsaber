@@ -1,6 +1,6 @@
 import math
 from pathlib import Path
-from pyrr import Matrix44
+from pyrr import matrix44
 
 from moderngl_window import resources
 from moderngl_window.meta import ProgramDescription, DataDescription
@@ -78,6 +78,8 @@ class BSScene:
         """Custom render method to gain exact control over the scene"""
         self.process_events(time, frame_time)
         cam = camera.matrix
+        translate = matrix44.create_from_translation((0, -2, -10), dtype='f4')
+        cam = matrix44.multiply(translate, cam)
 
         # Draw static geometry with default scene shader
         self.highway.draw(projection_matrix=camera.projection.matrix, camera_matrix=cam)
