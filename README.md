@@ -5,6 +5,17 @@ using [moderngl](https://github.com/moderngl/moderngl) and [moderngl-window](htt
 
 Music player provided by [pyglet](https://github.com/pyglet/pyglet)
 
+Install
+
+This project is using unreleased versions of pyglet and moderngl-window.
+See `requirements.txt`.
+
+```
+pip install -r requirements.txt
+```
+
+Run
+
 ```bash
 python beatsaber/main.py
 ```
