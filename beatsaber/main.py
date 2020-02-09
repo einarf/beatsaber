@@ -13,6 +13,7 @@ RESOURCE_DIR = Path(__file__).parent.resolve() / 'resources'
 class BeatSaber(moderngl_window.WindowConfig):
     title = "Beat Saber Light Show"
     window_size = 1920, 1080
+    cursor = False
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -60,8 +61,8 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.music_source = StaticSource(load(RESOURCE_DIR / 'megalovania_remix/song.wav'))
         self.music_player.queue(self.music_source)
         self.music_player.play()
-        self.music_player.seek(60.0 * 4 + 50)
-        self.music_player.volume = 0.001
+        # self.music_player.seek(60.0 * 4 + 50)
+        self.music_player.volume = 1.0
 
     def render(self, time, frame_time):
         self.offscreen.clear()
@@ -108,6 +109,10 @@ class BeatSaber(moderngl_window.WindowConfig):
                 self.wnd.cursor = not self.camera_enabled
             if key == keys.SPACE:
                 self.timer.toggle_pause()
+                if self.music_player.playing:
+                    self.music_player.pause()
+                else:
+                    self.music_player.play()
 
     def mouse_position_event(self, x: int, y: int, dx, dy):
         if self.camera_enabled:
