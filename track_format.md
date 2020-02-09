@@ -55,3 +55,4 @@ public static readonly int[] LIGHT_VALUE_TO_ROTATION_DEGREES = { -60, -45, -30, 
 
 ## Event Details
 
+The `RINGS_ROTATE` event value is always 0.

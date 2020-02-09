@@ -19,14 +19,14 @@ uniform sampler2D texture0;
 const int NUM_LAYERS = 10;
 const int KERNEL_SIZE = 5;
 const int KERNEL_HALF_SIZE = (KERNEL_SIZE - 1) / 2;
-const float KERNEL[KERNEL_SIZE] = float[KERNEL_SIZE](0.06136, 0.24477, 0.38774, 0.24477, 0.06136);
+const float KERNEL[KERNEL_SIZE] = float[KERNEL_SIZE](0.06135, 0.24477, 0.38774, 0.24477, 0.06135);
 
 void main() {
     vec2 uv_step = uv / textureSize(texture0, 0).xy;
     vec4 col = vec4(0.0);
     for (int layer = 0; layer < NUM_LAYERS; layer++) {
         for (int i = 0; i < KERNEL_SIZE; i++) {
-            col += texture(texture0, uv + vec2(0.0, uv_step.y * (i - KERNEL_HALF_SIZE)), float(layer)) * KERNEL[i] * 2.5;
+            col += texture(texture0, uv + vec2(0.0, uv_step.y * (i - KERNEL_HALF_SIZE)), layer) * KERNEL[i] * 2.0;
         }
     }
     outColor = vec4(col.rgb, 1.0) / KERNEL_SIZE;

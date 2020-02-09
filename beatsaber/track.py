@@ -5,10 +5,6 @@ from moderngl_window import resources
 from moderngl_window.meta import DataDescription
 
 
-class ChannelEvents:
-    """Internal event types to funnel event into more channels"""
-    
-
 class EventType(Enum):
     """Beat Saber event types"""
     BACK_LASERS = 0
@@ -35,7 +31,13 @@ class LightValue(Enum):
     RED_FADE = 7
 
 LIGHT_VALUE_TO_ROTATION_DEGREES = [-60, -45, -30, -15, 15, 30, 45, 60]
-
+LIGHT_EVENTS = [
+    EventType.BACK_LASERS,
+    EventType.RING_LIGHTS,
+    EventType.LEFT_LASERS,
+    EventType.RIGHT_LASERS,
+    EventType.ROAD_LIGHTS,
+]
 
 class BSTrack:
 
@@ -63,15 +65,15 @@ class BSTrack:
 
             channel = self.channels.get(event_type.value)
             if not channel:
-                print("Event {} not supported".format(event_type.value))
+                # print("Event {} not supported".format(event_type.value))
                 continue
 
             # Transform events if needed for easy access
             value = event['_value']
             # If value is greater or equal to 255 we are dealing with a color value
-            if value >= 255:
+            # FIXME: We discard these events for now
+            if value >= 255 and event_type.value < 5:
                 value = int_to_color_tuple(value)
-                # print(value)
                 continue
 
             channel.add_event(BSEvent(
@@ -79,6 +81,9 @@ class BSTrack:
                 int(event['_time'] * 1000 / (self.bpm / 60)),
                 value,
             ))
+
+        # for channel in self.channels.values():
+        #     channel.sort()
 
         # import pprint
         # pprint.pprint(self.channels[EventType.ROAD_LIGHTS.value].events[100:])
@@ -91,45 +96,68 @@ class BSChannel:
         self.events = []
         self.current_color = (1.0, 1.0, 1.0, 1.0)
 
+    def sort(self):
+        self.events.sort(key=lambda x: x.time)
+
     def get_value(self, time: int):
         index = bisect.bisect_left(self.events, time)
         event = self.events[index]
         if time < event.time:
-            if index == 0:
-                return (0,0,0,0), 0
+            if index <= 0:
+                if event.type in LIGHT_EVENTS:
+                    return (0,0,0,0), 0
+                elif event.type == EventType.RINGS_ROTATE:
+                    return 0, 0
+                elif event.type == EventType.RINGS_ZOOM:
+                    return 0, 0
+                elif event.type in [EventType.LEFT_LASERS_SPEED, EventType.RIGHT_LASERS_SPEED]:
+                    return 0, 0
+                else:
+                    return None
             else:
                 event = self.events[index - 1]
 
         color = None
-        # if event == EventType.ROAD_LIGHTS:
-        # Light color
-        if isinstance(event.value, tuple):
-            pass
-            #self.current_color = event.value
-            #color = self.current_color
-        # Lights off
-        elif event.value == 0:
-            color = (0, 0, 0, 0)
-        # Blue lights on
-        elif event.value == 1:
-            color = (0, 0, 1, 1)
-        # Blue flash
-        elif event.value == 2:
-            color = (0, 0, 1.0 - (time - event.time)/1000, 1)
-        # Blue Fade (3s)
-        elif event.value == 3:
-            color = (0, 0, 1.0 - (time - event.time)/3000, 1)
-        # Red lights on
-        elif event.value == 5:
-            color = (1, 0, 0, 1)
-        # Red flash
-        elif event.value == 6:
-            color = (1.0 - (time - event.time)/1000, 0, 0, 1)
-        # Red fade (3s)
-        elif event.value == 7:
-            color = (1.0 - (time - event.time)/2500, 0, 0, 1)           
+        if event.type in LIGHT_EVENTS:
+            # Light color
+            # if isinstance(event.value, tuple):
+            #     self.current_color = event.value
+            #     color = self.current_color
+            # Lights off
+            if event.value == 0:
+                color = (0, 0, 0, 0)
+            # Blue lights on
+            elif event.value == 1:
+                color = (0, 0, 1, 1)
+            # Blue flash
+            elif event.value == 2:
+                color = (0, 0, 1.0 - (time - event.time)/500, 1)
+            # Blue Fade (3s)
+            elif event.value == 3:
+                color = (0, 0, 1.0 - (time - event.time)/2000, 1)
+            # Red lights on
+            elif event.value == 5:
+                color = (1, 0, 0, 1)
+            # Red flash
+            elif event.value == 6:
+                color = (1.0 - (time - event.time)/1000, 0, 0, 1)
+            # Red fade (3s)
+            elif event.value == 7:
+                color = (1.0 - (time - event.time)/2500, 0, 0, 1)           
 
-        return color, event.time
+            return color, event.time
+        elif event.type == EventType.RINGS_ROTATE:
+            return event.time, event.value
+        elif event.type == EventType.RINGS_ZOOM:
+            if index < len(self.events) - 1:
+                next_event = self.events[index + 1]
+                value = (time - event.time) / (next_event.time - event.time)
+                return event.time, value
+            return event.type, 0
+        elif event.type in [EventType.LEFT_LASERS_SPEED, EventType.RIGHT_LASERS_SPEED]:
+            return event.time, event.value
+        else:
+            return None
 
     def add_event(self, event):
         self.events.append(event)
