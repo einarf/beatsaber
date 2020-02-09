@@ -9,7 +9,7 @@ Music player provided by [pyglet](https://github.com/pyglet/pyglet)
 python beatsaber/main.py
 ```
 
-![](screenshots/screenshot.png)
+![](https://raw.githubusercontent.com/einarf/beatsaber/master/screenshots/screenshot.PNG)
 
 ## Attributions
 
