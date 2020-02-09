@@ -3,8 +3,8 @@ from pathlib import Path
 from pyrr import matrix44
 
 from moderngl_window import resources
-from moderngl_window.meta import ProgramDescription, DataDescription
-from track import  EventType
+from moderngl_window.meta import ProgramDescription
+from track import EventType
 
 RESOURCE_DIR = Path(__file__).parent.resolve() / 'resources'
 resources.register_dir(RESOURCE_DIR)
@@ -34,12 +34,12 @@ class BSScene:
         self.inner_ring_vao = self.scene.find_node('Ring.001').mesh.vao
 
         # Outer rings
-        self.outer_ring_prog = resources.programs.load(ProgramDescription(path='programs/outer_rings.glsl'))        
+        self.outer_ring_prog = resources.programs.load(ProgramDescription(path='programs/outer_rings.glsl'))
         self.outer_ring_prog['color'] = static_color
         self.outer_ring_vao = self.scene.find_node('Ring.021').children[1].mesh.vao
 
         # Ring neons
-        self.ring_neon_prog = resources.programs.load(ProgramDescription(path='programs/outer_rings_neons.glsl'))        
+        self.ring_neon_prog = resources.programs.load(ProgramDescription(path='programs/outer_rings_neons.glsl'))
         self.ring_neon_1 = self.scene.find_node('Ring.021').children[0].mesh.vao
         self.ring_neon_2 = self.scene.find_node('Ring.021').children[2].mesh.vao
         self.ring_neon_3 = self.scene.find_node('Ring.021').children[3].mesh.vao

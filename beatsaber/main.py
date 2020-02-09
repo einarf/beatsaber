@@ -1,4 +1,3 @@
-import math
 from pathlib import Path
 import moderngl
 import moderngl_window

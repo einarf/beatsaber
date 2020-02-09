@@ -1,4 +1,3 @@
-import json
 import bisect
 from enum import Enum
 from moderngl_window import resources
@@ -30,6 +29,7 @@ class LightValue(Enum):
     RED_FLASH = 6
     RED_FADE = 7
 
+
 LIGHT_VALUE_TO_ROTATION_DEGREES = [-60, -45, -30, -15, 15, 30, 45, 60]
 LIGHT_EVENTS = [
     EventType.BACK_LASERS,
@@ -38,6 +38,8 @@ LIGHT_EVENTS = [
     EventType.RIGHT_LASERS,
     EventType.ROAD_LIGHTS,
 ]
+LASER_SPEED_EVENTS = [EventType.LEFT_LASERS_SPEED, EventType.RIGHT_LASERS_SPEED]
+
 
 class BSTrack:
 
@@ -60,7 +62,7 @@ class BSTrack:
         for event in data['_events']:
             try:
                 event_type = EventType(event['_type'])
-            except ValueError as ex:
+            except ValueError:
                 raise ValueError("Event type {} not supported".format(event['_type']))
 
             channel = self.channels.get(event_type.value)
@@ -73,7 +75,6 @@ class BSTrack:
             # If value is greater or equal to 255 we are dealing with a color value
             # FIXME: We discard these events for now
             if value >= 255 and event_type.value < 5:
-                value = int_to_color_tuple(value)
                 continue
 
             channel.add_event(BSEvent(
@@ -81,12 +82,6 @@ class BSTrack:
                 int(event['_time'] * 1000 / (self.bpm / 60)),
                 value,
             ))
-
-        # for channel in self.channels.values():
-        #     channel.sort()
-
-        # import pprint
-        # pprint.pprint(self.channels[EventType.ROAD_LIGHTS.value].events[100:])
 
 
 class BSChannel:
@@ -105,12 +100,12 @@ class BSChannel:
         if time < event.time:
             if index <= 0:
                 if event.type in LIGHT_EVENTS:
-                    return (0,0,0,0), 0
+                    return (0, 0, 0, 0), 0
                 elif event.type == EventType.RINGS_ROTATE:
                     return 0, 0
                 elif event.type == EventType.RINGS_ZOOM:
                     return 0, 0
-                elif event.type in [EventType.LEFT_LASERS_SPEED, EventType.RIGHT_LASERS_SPEED]:
+                elif event.type in LASER_SPEED_EVENTS:
                     return 0, 0
                 else:
                     return None
@@ -119,10 +114,6 @@ class BSChannel:
 
         color = None
         if event.type in LIGHT_EVENTS:
-            # Light color
-            # if isinstance(event.value, tuple):
-            #     self.current_color = event.value
-            #     color = self.current_color
             # Lights off
             if event.value == 0:
                 color = (0, 0, 0, 0)
@@ -143,7 +134,7 @@ class BSChannel:
                 color = (1.0 - (time - event.time)/1000, 0, 0, 1)
             # Red fade (3s)
             elif event.value == 7:
-                color = (1.0 - (time - event.time)/2500, 0, 0, 1)           
+                color = (1.0 - (time - event.time)/2500, 0, 0, 1)
 
             return color, event.time
         elif event.type == EventType.RINGS_ROTATE:
@@ -154,7 +145,7 @@ class BSChannel:
                 value = (time - event.time) / (next_event.time - event.time)
                 return event.time, value
             return event.type, 0
-        elif event.type in [EventType.LEFT_LASERS_SPEED, EventType.RIGHT_LASERS_SPEED]:
+        elif event.type in LASER_SPEED_EVENTS:
             return event.time, event.value
         else:
             return None
@@ -177,12 +168,5 @@ class BSEvent:
         return self.time > other
 
     def __repr__(self):
-        return "<BSEvent type={} time={} value={}".format(self.type, self.time, self.value)
-
-def int_to_color_tuple(value):
-    return (
-        ((2002894892 & 0xFF000000) >> 24) / 255,
-        ((2002894892 & 0x00FF0000) >> 16) / 255,
-        ((2002894892 & 0x0000FF00) >> 8) / 255,
-        (2002894892 & 0x000000FF) / 255,
-    )
+        return "<BSEvent type={} time={} value={}".format(
+            self.type, self.time, self.value)
