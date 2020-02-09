@@ -14,6 +14,7 @@ class BeatSaber(moderngl_window.WindowConfig):
     title = "Beat Saber Light Show"
     window_size = 1920, 1080
     cursor = False
+    aspect_ratio = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
