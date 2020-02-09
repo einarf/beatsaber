@@ -5,16 +5,17 @@
 * BPM: 242
 * URL: https://bsaber.com/songs/63e1/
 
-Possible test song : https://www.youtube.com/watch?v=J6C8ehSdbm0
+Possible test song:
+
+* https://bsaber.com/songs/69d6/
+* https://beatsaver.com/uploader/5cff0b7598cc5a672c85311e
+* https://beatsaver.com/uploader/5cff0b7298cc5a672c84eaa1 (maybe?)
 
 ## Time
 
 Time in events is in beats of the global bpm
 
 ## Event types
-
-High event values refers to light colors?
-For example `2002171391` is `0x7756b5ff` (purple).
 
 https://github.com/Caeden117/ChroMapper/blob/master/Assets/__Scripts/Map/Events/MapEvent.cs#L12
 
@@ -56,3 +57,10 @@ public static readonly int[] LIGHT_VALUE_TO_ROTATION_DEGREES = { -60, -45, -30, 
 ## Event Details
 
 The `RINGS_ROTATE` event value is always 0.
+
+### Chroma rgba events
+
+High event values refers to light colors. For example `2002171391` is `0x7756b5ff` (purple).
+
+> once a chroma rgb event is triggered all events in that type will be that color until another chroma rgb event is triggered
+or you use the chroma rgb reset event to reset that -Caeden117
