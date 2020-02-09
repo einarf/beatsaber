@@ -10,7 +10,9 @@ Music player provided by [pyglet](https://github.com/pyglet/pyglet)
 This project is using unreleased versions of pyglet and moderngl-window.
 See `requirements.txt`.
 
-```
+Currently requires python 3.7.
+
+```bash
 pip install -r requirements.txt
 ```
 
