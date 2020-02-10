@@ -1,5 +1,7 @@
 # beatsaber
 
+![](https://raw.githubusercontent.com/einarf/beatsaber/master/screenshots/screenshot.PNG)
+
 Beat Saber light shows player
 using [moderngl](https://github.com/moderngl/moderngl) and [moderngl-window](https://github.com/moderngl/moderngl-window).
 
@@ -29,7 +31,13 @@ python beatsaber\main.py
 python -m beatsaber.main
 ```
 
-![](https://raw.githubusercontent.com/einarf/beatsaber/master/screenshots/screenshot.PNG)
+## Controls
+
+```
+SPACE: Pause music
+RIGHT: Skip 10 seconds forward
+LEFT: Skip 10 seconds backwards
+```
 
 ## Run tests
 
