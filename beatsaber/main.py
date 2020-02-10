@@ -65,7 +65,7 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.music_player.queue(self.music_source)
         self.music_player.play()
         # self.music_player.seek(60.0 * 3)
-        self.music_player.volume = 0.01
+        self.music_player.volume = 0.5
 
     def render(self, time, frame_time):
         self.offscreen.clear()
@@ -110,12 +110,16 @@ class BeatSaber(moderngl_window.WindowConfig):
                 self.camera_enabled = not self.camera_enabled
                 self.wnd.mouse_exclusivity = self.camera_enabled
                 self.wnd.cursor = not self.camera_enabled
-            if key == keys.SPACE:
+            elif key == keys.SPACE:
                 self.timer.toggle_pause()
                 if self.music_player.playing:
                     self.music_player.pause()
                 else:
                     self.music_player.play()
+            elif key == keys.LEFT:
+                self.music_player.seek(max(0, self.music_player.time - 10))
+            elif key == keys.RIGHT:
+                self.music_player.seek(self.music_player.time + 10)
 
     def mouse_position_event(self, x: int, y: int, dx, dy):
         if self.camera_enabled:
