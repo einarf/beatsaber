@@ -5,3 +5,6 @@
 # Unreleased deps
 https://github.com/pyglet/pyglet/archive/pyglet-1.5-maintenance.zip
 https://github.com/moderngl/moderngl-window/archive/master.zip
+
+# Tests
+pytest
