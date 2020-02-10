@@ -1,3 +1,5 @@
+import pyglet
+pyglet.options['audio'] = ('openal', 'pulse', 'directsound', 'silent')
 from pyglet.media import Player, StaticSource, load
 
 import moderngl
@@ -62,7 +64,7 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.music_source = StaticSource(load(RESOURCE_DIR / 'megalovania_remix/song.wav'))
         self.music_player.queue(self.music_source)
         self.music_player.play()
-        self.music_player.seek(60.0 * 4 + 50)
+        # self.music_player.seek(60.0 * 3)
         self.music_player.volume = 0.01
 
     def render(self, time, frame_time):
