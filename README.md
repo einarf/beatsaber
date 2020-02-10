@@ -13,16 +13,29 @@ See `requirements.txt`.
 Currently requires python 3.7.
 
 ```bash
-pip install -r requirements.txt
+$ pip install -e .
+$ pip install -r requirements.txt
 ```
 
 ## Run
 
+During installation the `beatsaber` command should be available.
+
 ```bash
-python beatsaber/main.py
+$ beatsaber
+
+# Optionally
+python beatsaber\main.py
+python -m beatsaber.main
 ```
 
 ![](https://raw.githubusercontent.com/einarf/beatsaber/master/screenshots/screenshot.PNG)
+
+## Run tests
+
+```
+pytest
+```
 
 ## Attributions
 
