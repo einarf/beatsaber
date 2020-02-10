@@ -22,9 +22,9 @@ const int KERNEL_HALF_SIZE = (KERNEL_SIZE - 1) / 2;
 const float KERNEL[KERNEL_SIZE] = float[KERNEL_SIZE](0.06137, 0.24477, 0.38774, 0.24477, 0.06137);
 
 void main() {
-    vec2 uv_step = uv / textureSize(texture0, 0).xy;
     vec4 col = vec4(0.0);
     for (int layer = 0; layer < NUM_LAYERS; layer++) {
+        vec2 uv_step = uv / textureSize(texture0, layer).xy;
         for (int i = 0; i < KERNEL_SIZE; i++) {
             col += texture(texture0, uv + vec2(uv_step.x * (i - KERNEL_HALF_SIZE)), layer) * KERNEL[i] * 2.0;
         }
