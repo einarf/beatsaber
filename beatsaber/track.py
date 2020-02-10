@@ -1,5 +1,6 @@
 import bisect
 from enum import Enum
+
 from moderngl_window import resources
 from moderngl_window.meta import DataDescription
 

@@ -1,13 +1,11 @@
 import math
-from pathlib import Path
+
 from pyrr import matrix44
 
 from moderngl_window import resources
 from moderngl_window.meta import ProgramDescription
-from track import EventType
 
-RESOURCE_DIR = Path(__file__).parent.resolve() / 'resources'
-resources.register_dir(RESOURCE_DIR)
+from beatsaber.track import EventType
 
 
 class BSScene:

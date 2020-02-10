@@ -1,13 +1,13 @@
-from pathlib import Path
+from pyglet.media import Player, StaticSource, load
+
 import moderngl
 import moderngl_window
-from pyglet.media import Player, StaticSource, load
 from moderngl_window.scene import KeyboardCamera
 from moderngl_window import geometry
-from track import BSTrack
-from scene import BSScene
 
-RESOURCE_DIR = Path(__file__).parent.resolve() / 'resources'
+from beatsaber import RESOURCE_DIR
+from beatsaber.track import BSTrack
+from beatsaber.scene import BSScene
 
 
 class BeatSaber(moderngl_window.WindowConfig):
@@ -25,7 +25,7 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.camera_enabled = False
 
         meta = self.load_json('megalovania_remix/info.dat')
-        self.map = BSScene(
+        self.scene = BSScene(
             self.load_scene('bs_map3.glb'),
             self.camera,
             BSTrack('megalovania_remix/Expert.dat', meta['_beatsPerMinute']),
@@ -62,8 +62,8 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.music_source = StaticSource(load(RESOURCE_DIR / 'megalovania_remix/song.wav'))
         self.music_player.queue(self.music_source)
         self.music_player.play()
-        # self.music_player.seek(60.0 * 4 + 50)
-        self.music_player.volume = 1.0
+        self.music_player.seek(60.0 * 4 + 50)
+        self.music_player.volume = 0.01
 
     def render(self, time, frame_time):
         self.offscreen.clear()
@@ -73,7 +73,7 @@ class BeatSaber(moderngl_window.WindowConfig):
 
         self.offscreen.use()
         self.ctx.enable_only(moderngl.DEPTH_TEST | moderngl.CULL_FACE)
-        self.map.render(self.camera, time, frame_time)
+        self.scene.render(self.camera, time, frame_time)
 
         self.ctx.enable_only(moderngl.NOTHING)
 
@@ -121,8 +121,12 @@ class BeatSaber(moderngl_window.WindowConfig):
 
     def resize(self, width: int, height: int):
         self.camera.projection.update(aspect_ratio=self.wnd.aspect_ratio)
-        self.map.resize()
+        self.scene.resize()
+
+
+def run_from_cmd():
+    moderngl_window.run_window_config(BeatSaber)
 
 
 if __name__ == '__main__':
-    moderngl_window.run_window_config(BeatSaber)
+    run_from_cmd()
