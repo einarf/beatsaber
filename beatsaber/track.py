@@ -84,6 +84,10 @@ class BSTrack:
                 value,
             ))
 
+        # Ensure all channels have events sorted by time
+        for channel in self.channels.values():
+            channel.sort()
+
 
 class BSChannel:
 
@@ -93,7 +97,7 @@ class BSChannel:
         self.current_color = (1.0, 1.0, 1.0, 1.0)
 
     def sort(self):
-        self.events.sort(key=lambda x: x.time)
+        self.events.sort()
 
     def get_value(self, time: int):
         index = bisect.bisect_left(self.events, time)
@@ -163,10 +167,16 @@ class BSEvent:
         self.value = value
 
     def __lt__(self, other):
-        return self.time < other
+        if isinstance(other, int):
+            return self.time < other
+        elif isinstance(other, BSEvent):
+            return self.time < other.time
 
     def __ge__(self, other):
-        return self.time > other
+        if isinstance(other, int):
+            return self.time > other
+        elif isinstance(other, BSEvent):
+            return self.time > other.time
 
     def __repr__(self):
         return "<BSEvent type={} time={} value={}".format(
