@@ -22,7 +22,7 @@ class BeatSaber(moderngl_window.WindowConfig):
         super().__init__(**kwargs)
         self.wnd.mouse_exclusivity = False
         self.bpm = 242  # Hardcode bpm from info.dat
-        self.camera = KeyboardCamera(self.wnd.keys, fov=60, near=1.0, far=1000.0)
+        self.camera = KeyboardCamera(self.wnd.keys, aspect_ratio=self.wnd.aspect_ratio, fov=60, near=1.0, far=1000.0)
         self.camera.velocity = 50
         self.camera_enabled = False
 
@@ -50,7 +50,7 @@ class BeatSaber(moderngl_window.WindowConfig):
             color_attachments=[self.offscreen_texture],
             depth_attachment=self.offscreen_depth,
         )
-        bd = 1
+        bd = 4
         self.blur_h_texture = self.ctx.texture((self.wnd.buffer_width // bd, self.wnd.buffer_height // bd), 4)
         self.blur_h_texture.repeat_x = False
         self.blur_h_texture.repeat_y = False
@@ -65,9 +65,11 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.music_player.queue(self.music_source)
         self.music_player.play()
         # self.music_player.seek(60.0 * 3)
-        self.music_player.volume = 0.5
+        self.music_player.volume = 1.0
+        pyglet.clock.tick()
 
     def render(self, time, frame_time):
+        pyglet.clock.tick()
         self.offscreen.clear()
         self.blur_h.clear()
         self.blur_v.clear()

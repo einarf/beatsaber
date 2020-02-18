@@ -3,7 +3,7 @@
 # pyglet==1.5.*
 
 # Unreleased deps
-https://github.com/pyglet/pyglet/archive/pyglet-1.5-maintenance.zip
+pyglet==1.5.*
 https://github.com/moderngl/moderngl-window/archive/master.zip
 
 # Tests
