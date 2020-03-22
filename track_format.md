@@ -8,8 +8,8 @@
 Possible test song:
 
 * https://bsaber.com/songs/69d6/
-* https://beatsaver.com/uploader/5cff0b7598cc5a672c85311e
-* https://beatsaver.com/uploader/5cff0b7298cc5a672c84eaa1 (maybe?)
+* https://bsaber.com/songs/new/?uploaded_by=Rexxz
+* https://bsaber.com/tag/dgrj4life/ (maybe?)
 
 ## Time
 
