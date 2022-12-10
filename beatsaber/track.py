@@ -64,7 +64,9 @@ class BSTrack:
             try:
                 event_type = EventType(event['_type'])
             except ValueError:
-                raise ValueError("Event type {} not supported".format(event['_type']))
+                print("Event type {} not supported".format(event['_type']))
+                continue
+                # raise ValueError("Event type {} not supported".format(event['_type']))
 
             channel = self.channels.get(event_type.value)
             if not channel:
