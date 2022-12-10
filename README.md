@@ -9,22 +9,35 @@ Music player provided by [pyglet](https://github.com/pyglet/pyglet)
 
 ## Install
 
-
 ```bash
-$ pip install -e .
+$ git clone https://github.com/einarf/beatsaber.git
+cd beatsaber
+$ pip install --user .
 ```
+
+This should give you access to the `beatsaber` command.
 
 ## Run
 
-During installation the `beatsaber` command should be available.
+Run with default song:
 
 ```bash
 $ beatsaber
 
-# Optionally
+# Optionally from source directory
 python beatsaber/main.py
 python -m beatsaber.main
 ```
+
+Running custom song:
+
+```bash
+cd song_directory
+beatsaber --song song.wav --track Expert.dat --info info.dat
+```
+
+You may have to convert the song file to wav depending on your setup.
+This can easily be done with vlc or other popular media apps.
 
 ## Controls
 
