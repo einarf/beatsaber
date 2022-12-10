@@ -26,11 +26,15 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.camera.velocity = 50
         self.camera_enabled = False
 
-        meta = self.load_json('megalovania_remix/info.dat')
+        dat_file = 'megalovania_remix/info.dat'
+        song_file = 'megalovania_remix/song.wav'
+        track_file = 'megalovania_remix/Expert.dat'
+
+        meta = self.load_json(dat_file)
         self.scene = BSScene(
             self.load_scene('bs_map3.glb'),
             self.camera,
-            BSTrack('megalovania_remix/Expert.dat', meta['_beatsPerMinute']),
+            BSTrack(track_file, meta['_beatsPerMinute']),
         )
 
         self.quad_fs = geometry.quad_fs()
@@ -61,7 +65,7 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.blur_v = self.ctx.framebuffer(color_attachments=[self.blur_v_texture])
 
         self.music_player = Player()
-        self.music_source = StaticSource(load(RESOURCE_DIR / 'megalovania_remix/song.wav'))
+        self.music_source = StaticSource(load(RESOURCE_DIR / song_file))
         self.music_player.queue(self.music_source)
         self.music_player.play()
         # self.music_player.seek(60.0 * 3)
