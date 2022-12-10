@@ -100,7 +100,11 @@ class BSChannel:
         self.events.sort()
 
     def get_value(self, time: int):
+        if len(self.events) == 0:
+            return 0, 0
         index = bisect.bisect_left(self.events, time)
+        if index >= len(self.events):
+            index = len(self.events) - 1
         event = self.events[index]
         if time < event.time:
             if index <= 0:
