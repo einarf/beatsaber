@@ -3,7 +3,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name="beatsaber",
-    version="0.1.1",
+    version="0.2.0",
     description="Beat Saber player",
     url="https://github.com/einarf/beatsaber",
     license='MIT',
@@ -28,10 +28,9 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    # requires=[
-    #     'pyglet>=1.5,<2',
-    #     'moderngl_window>=2.1,<3',
-    # ],
+    install_requires=[
+        "moderngl-window ~= 2.4.2",
+    ],
     entry_points={'console_scripts': [
         'beatsaber = beatsaber.main:run_from_cmd',
     ]},

@@ -9,12 +9,9 @@ Music player provided by [pyglet](https://github.com/pyglet/pyglet)
 
 ## Install
 
-This project is using unreleased versions of pyglet and moderngl-window.
-See `requirements.txt`.
 
 ```bash
 $ pip install -e .
-$ pip install -r requirements.txt
 ```
 
 ## Run
@@ -25,7 +22,7 @@ During installation the `beatsaber` command should be available.
 $ beatsaber
 
 # Optionally
-python beatsaber\main.py
+python beatsaber/main.py
 python -m beatsaber.main
 ```
 
@@ -35,6 +32,14 @@ python -m beatsaber.main
 SPACE: Pause music
 RIGHT: Skip 10 seconds forward
 LEFT: Skip 10 seconds backwards
+```
+
+Debug controls:
+
+```
+C: Toggle camera
+Mouse: Rotate camera
+WASD: Move camera
 ```
 
 ## Run tests
