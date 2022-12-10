@@ -1,3 +1,4 @@
+from pathlib import Path
 import pyglet
 pyglet.options['audio'] = ('openal', 'pulse', 'directsound', 'silent')
 from pyglet.media import Player, StaticSource, load
@@ -6,6 +7,7 @@ import moderngl
 import moderngl_window
 from moderngl_window.scene import KeyboardCamera
 from moderngl_window import geometry
+from moderngl_window import settings
 
 from beatsaber import RESOURCE_DIR
 from beatsaber.track import BSTrack
@@ -26,9 +28,18 @@ class BeatSaber(moderngl_window.WindowConfig):
         self.camera.velocity = 50
         self.camera_enabled = False
 
-        dat_file = 'megalovania_remix/info.dat'
-        song_file = 'megalovania_remix/song.wav'
-        track_file = 'megalovania_remix/Expert.dat'
+        print("Song  :", self.argv.song)
+        print("Info  :", self.argv.info)
+        print("Track :", self.argv.track)
+
+        if self.argv.song is not None:
+            RESOURCE_DIR = Path.cwd()
+            settings.DATA_DIRS.insert(0, RESOURCE_DIR)
+            print("Resource dir:", RESOURCE_DIR)
+
+        dat_file = self.argv.info or 'megalovania_remix/info.dat'
+        song_file = self.argv.song or 'megalovania_remix/song.wav'
+        track_file = self.argv.track or 'megalovania_remix/Expert.dat'
 
         meta = self.load_json(dat_file)
         self.scene = BSScene(
@@ -134,6 +145,14 @@ class BeatSaber(moderngl_window.WindowConfig):
     def resize(self, width: int, height: int):
         self.camera.projection.update(aspect_ratio=self.wnd.aspect_ratio)
         self.scene.resize()
+
+    @classmethod
+    def add_arguments(cls, parser):
+        parser.add_argument('--song', type=str, help="Song file")
+        parser.add_argument('--info', type=str, help="Info file")
+        parser.add_argument('--track', type=str, help="Track file")
+
+
 
 
 def run_from_cmd():
